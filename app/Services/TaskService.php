@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Task;
 use App\Models\User;
 use App\Repositories\Contracts\TaskRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TaskService
 {
@@ -14,9 +14,9 @@ class TaskService
     ) {
     }
 
-    public function getUserTasks(User $user): Collection
+    public function getUserTasks(User $user, array $filters = []): LengthAwarePaginator
     {
-        return $this->taskRepository->getAllForUser($user);
+        return $this->taskRepository->getAllForUser($user, $filters);
     }
 
     public function createTask(User $user, array $data): Task

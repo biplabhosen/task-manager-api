@@ -5,15 +5,27 @@ namespace App\Repositories;
 use App\Models\Task;
 use App\Models\User;
 use App\Repositories\Contracts\TaskRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TaskRepository implements TaskRepositoryInterface
 {
-    public function getAllForUser(User $user): Collection
+    public function getAllForUser(User $user, array $filters = []): LengthAwarePaginator
     {
-        return $user->tasks()
-            ->latest()
-            ->get();
+        $query = $user->tasks()->latest();
+
+        if (! empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (! empty($filters['due_date'])) {
+            $query->whereDate('due_date', $filters['due_date']);
+        }
+
+        if (! empty($filters['search'])) {
+            $query->where('title', 'like', '%'.$filters['search'].'%');
+        }
+
+        return $query->paginate($filters['per_page'] ?? 15)->withQueryString();
     }
 
     public function createForUser(User $user, array $data): Task

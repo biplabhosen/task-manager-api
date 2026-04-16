@@ -4,11 +4,11 @@ namespace App\Repositories\Contracts;
 
 use App\Models\Task;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface TaskRepositoryInterface
 {
-    public function getAllForUser(User $user): Collection;
+    public function getAllForUser(User $user, array $filters = []): LengthAwarePaginator;
 
     public function createForUser(User $user, array $data): Task;
 

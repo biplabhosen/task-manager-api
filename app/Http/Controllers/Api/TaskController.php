@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Task\IndexTaskRequest;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Models\Task;
@@ -17,9 +18,12 @@ class TaskController extends Controller
     ) {
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(IndexTaskRequest $request): JsonResponse
     {
-        $tasks = $this->taskService->getUserTasks($request->user());
+        $tasks = $this->taskService->getUserTasks(
+            $request->user(),
+            $request->validated(),
+        );
 
         return response()->json([
             'success' => true,
@@ -78,4 +82,5 @@ class TaskController extends Controller
             'data' => null,
         ]);
     }
+
 }
