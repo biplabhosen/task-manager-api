@@ -6,17 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Models\Task;
+use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+    public function __construct(
+        protected TaskService $taskService,
+    ) {
+    }
+
     public function index(Request $request): JsonResponse
     {
-        $tasks = $request->user()
-            ->tasks()
-            ->latest()
-            ->get();
+        $tasks = $this->taskService->getUserTasks($request->user());
 
         return response()->json([
             'success' => true,
@@ -27,7 +30,10 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request): JsonResponse
     {
-        $task = $request->user()->tasks()->create($request->validated());
+        $task = $this->taskService->createTask(
+            $request->user(),
+            $request->validated(),
+        );
 
         return response()->json([
             'success' => true,
@@ -38,9 +44,7 @@ class TaskController extends Controller
 
     public function show(Request $request, Task $task): JsonResponse
     {
-        $task = $request->user()
-            ->tasks()
-            ->findOrFail($task->id);
+        $task = $this->taskService->getTask($request->user(), $task->id);
 
         return response()->json([
             'success' => true,
@@ -51,26 +55,22 @@ class TaskController extends Controller
 
     public function update(UpdateTaskRequest $request, Task $task): JsonResponse
     {
-        $task = $request->user()
-            ->tasks()
-            ->findOrFail($task->id);
-
-        $task->update($request->validated());
+        $task = $this->taskService->updateTask(
+            $request->user(),
+            $task->id,
+            $request->validated(),
+        );
 
         return response()->json([
             'success' => true,
             'message' => 'Task updated successfully.',
-            'data' => $task->fresh(),
+            'data' => $task,
         ]);
     }
 
     public function destroy(Request $request, Task $task): JsonResponse
     {
-        $task = $request->user()
-            ->tasks()
-            ->findOrFail($task->id);
-
-        $task->delete();
+        $this->taskService->deleteTask($request->user(), $task->id);
 
         return response()->json([
             'success' => true,
