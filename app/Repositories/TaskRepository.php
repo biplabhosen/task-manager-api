@@ -6,36 +6,40 @@ use App\Models\Task;
 use App\Models\User;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class TaskRepository implements TaskRepositoryInterface
 {
     public function getAllForUser(User $user, array $filters = []): LengthAwarePaginator
     {
-        $query = $user->tasks()->latest();
-
-        if (! empty($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
-
-        if (! empty($filters['due_date'])) {
-            $query->whereDate('due_date', $filters['due_date']);
-        }
-
-        if (! empty($filters['search'])) {
-            $query->where('title', 'like', '%'.$filters['search'].'%');
-        }
+        $query = $this->queryForUser($user)
+            ->when(
+                ! empty($filters['status']),
+                fn (Builder $builder) => $builder->where('status', $filters['status']),
+            )
+            ->when(
+                ! empty($filters['due_date']),
+                fn (Builder $builder) => $builder->whereDate('due_date', $filters['due_date']),
+            )
+            ->when(
+                ! empty($filters['search']),
+                fn (Builder $builder) => $builder->where('title', 'like', '%'.$filters['search'].'%'),
+            )
+            ->latest();
 
         return $query->paginate($filters['per_page'] ?? 15)->withQueryString();
     }
 
     public function createForUser(User $user, array $data): Task
     {
-        return $user->tasks()->create($data);
+        $task = $user->tasks()->create($data);
+
+        return $this->findForUser($user, $task->id);
     }
 
     public function findForUser(User $user, int $taskId): Task
     {
-        return $user->tasks()->findOrFail($taskId);
+        return $this->queryForUser($user)->findOrFail($taskId);
     }
 
     public function updateForUser(User $user, int $taskId, array $data): Task
@@ -58,6 +62,20 @@ class TaskRepository implements TaskRepositoryInterface
     {
         return $this->updateForUser($user, $taskId, [
             'status' => Task::STATUS_COMPLETED,
+        ]);
+    }
+
+    private function queryForUser(User $user): Builder
+    {
+        return $user->tasks()->select([
+            'id',
+            'user_id',
+            'title',
+            'description',
+            'status',
+            'due_date',
+            'created_at',
+            'updated_at',
         ]);
     }
 }

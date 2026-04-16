@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Task\CompleteTaskRequest;
 use App\Http\Requests\Task\IndexTaskRequest;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
-use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -52,9 +52,9 @@ class TaskController extends Controller
         );
     }
 
-    public function show(Request $request, Task $task): JsonResponse
+    public function show(Request $request, int $task): JsonResponse
     {
-        $task = $this->taskService->getTask($request->user(), $task->id);
+        $task = $this->taskService->getTask($request->user(), $task);
 
         return $this->successResponse(
             'Task retrieved successfully.',
@@ -62,11 +62,11 @@ class TaskController extends Controller
         );
     }
 
-    public function update(UpdateTaskRequest $request, Task $task): JsonResponse
+    public function update(UpdateTaskRequest $request, int $task): JsonResponse
     {
         $task = $this->taskService->updateTask(
             $request->user(),
-            $task->id,
+            $task,
             $request->validated(),
         );
 
@@ -76,16 +76,16 @@ class TaskController extends Controller
         );
     }
 
-    public function destroy(Request $request, Task $task): JsonResponse
+    public function destroy(Request $request, int $task): JsonResponse
     {
-        $this->taskService->deleteTask($request->user(), $task->id);
+        $this->taskService->deleteTask($request->user(), $task);
 
         return $this->successResponse('Task deleted successfully.');
     }
 
-    public function complete(Request $request, Task $task): JsonResponse
+    public function complete(CompleteTaskRequest $request, int $task): JsonResponse
     {
-        $task = $this->taskService->markTaskAsCompleted($request->user(), $task->id);
+        $task = $this->taskService->markTaskAsCompleted($request->user(), $task);
 
         return $this->successResponse(
             'Task marked as completed successfully.',
