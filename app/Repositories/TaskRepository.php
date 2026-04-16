@@ -53,4 +53,11 @@ class TaskRepository implements TaskRepositoryInterface
 
         $task->delete();
     }
+
+    public function markAsCompletedForUser(User $user, int $taskId): Task
+    {
+        return $this->updateForUser($user, $taskId, [
+            'status' => Task::STATUS_COMPLETED,
+        ]);
+    }
 }

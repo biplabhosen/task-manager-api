@@ -38,4 +38,9 @@ class TaskService
     {
         $this->taskRepository->deleteForUser($user, $taskId);
     }
+
+    public function markTaskAsCompleted(User $user, int $taskId): Task
+    {
+        return $this->taskRepository->markAsCompletedForUser($user, $taskId);
+    }
 }

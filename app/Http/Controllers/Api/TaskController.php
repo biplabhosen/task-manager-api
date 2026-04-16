@@ -83,4 +83,15 @@ class TaskController extends Controller
         ]);
     }
 
+    public function complete(Request $request, Task $task): JsonResponse
+    {
+        $task = $this->taskService->markTaskAsCompleted($request->user(), $task->id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Task marked as completed successfully.',
+            'data' => $task,
+        ]);
+    }
+
 }

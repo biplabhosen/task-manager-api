@@ -23,5 +23,6 @@ Route::middleware('auth:sanctum')->group(function (): void {
         ]);
     });
 
+    Route::patch('tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
     Route::apiResource('tasks', TaskController::class);
 });

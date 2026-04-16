@@ -17,4 +17,6 @@ interface TaskRepositoryInterface
     public function updateForUser(User $user, int $taskId, array $data): Task;
 
     public function deleteForUser(User $user, int $taskId): void;
+
+    public function markAsCompletedForUser(User $user, int $taskId): Task;
 }
