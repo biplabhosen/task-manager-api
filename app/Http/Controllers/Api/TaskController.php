@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\IndexTaskRequest;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
@@ -25,11 +26,16 @@ class TaskController extends Controller
             $request->validated(),
         );
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Tasks retrieved successfully.',
-            'data' => $tasks,
-        ]);
+        return $this->successResponse(
+            'Tasks retrieved successfully.',
+            TaskResource::collection($tasks->items()),
+            meta: [
+                'current_page' => $tasks->currentPage(),
+                'last_page' => $tasks->lastPage(),
+                'per_page' => $tasks->perPage(),
+                'total' => $tasks->total(),
+            ],
+        );
     }
 
     public function store(StoreTaskRequest $request): JsonResponse
@@ -39,22 +45,21 @@ class TaskController extends Controller
             $request->validated(),
         );
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Task created successfully.',
-            'data' => $task,
-        ], 201);
+        return $this->successResponse(
+            'Task created successfully.',
+            new TaskResource($task),
+            201,
+        );
     }
 
     public function show(Request $request, Task $task): JsonResponse
     {
         $task = $this->taskService->getTask($request->user(), $task->id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Task retrieved successfully.',
-            'data' => $task,
-        ]);
+        return $this->successResponse(
+            'Task retrieved successfully.',
+            new TaskResource($task),
+        );
     }
 
     public function update(UpdateTaskRequest $request, Task $task): JsonResponse
@@ -65,33 +70,26 @@ class TaskController extends Controller
             $request->validated(),
         );
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Task updated successfully.',
-            'data' => $task,
-        ]);
+        return $this->successResponse(
+            'Task updated successfully.',
+            new TaskResource($task),
+        );
     }
 
     public function destroy(Request $request, Task $task): JsonResponse
     {
         $this->taskService->deleteTask($request->user(), $task->id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Task deleted successfully.',
-            'data' => null,
-        ]);
+        return $this->successResponse('Task deleted successfully.');
     }
 
     public function complete(Request $request, Task $task): JsonResponse
     {
         $task = $this->taskService->markTaskAsCompleted($request->user(), $task->id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Task marked as completed successfully.',
-            'data' => $task,
-        ]);
+        return $this->successResponse(
+            'Task marked as completed successfully.',
+            new TaskResource($task),
+        );
     }
-
 }
