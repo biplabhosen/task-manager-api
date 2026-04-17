@@ -6,7 +6,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TaskRepository implements TaskRepositoryInterface
 {
@@ -15,15 +15,15 @@ class TaskRepository implements TaskRepositoryInterface
         $query = $this->queryForUser($user)
             ->when(
                 ! empty($filters['status']),
-                fn (Builder $builder) => $builder->where('status', $filters['status']),
+                fn ($query) => $query->where('status', $filters['status']),
             )
             ->when(
                 ! empty($filters['due_date']),
-                fn (Builder $builder) => $builder->whereDate('due_date', $filters['due_date']),
+                fn ($query) => $query->whereDate('due_date', $filters['due_date']),
             )
             ->when(
                 ! empty($filters['search']),
-                fn (Builder $builder) => $builder->where('title', 'like', '%'.$filters['search'].'%'),
+                fn ($query) => $query->where('title', 'like', '%'.$filters['search'].'%'),
             )
             ->latest();
 
@@ -65,7 +65,7 @@ class TaskRepository implements TaskRepositoryInterface
         ]);
     }
 
-    private function queryForUser(User $user): Builder
+    private function queryForUser(User $user): HasMany
     {
         return $user->tasks()->select([
             'id',
