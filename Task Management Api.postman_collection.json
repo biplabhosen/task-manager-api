@@ -1,0 +1,850 @@
+{
+  "info": {
+    "_postman_id": "69772aff-0de5-4fad-898b-86055d80a54c",
+    "name": "Task Management Api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48281307",
+    "_collection_link": "https://go.postman.co/collection/48281307-69772aff-0de5-4fad-898b-86055d80a54c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "name",
+              "value": "Biplab Hosen",
+              "type": "text"
+            },
+            {
+              "key": "email",
+              "value": "biplab@gmail.com",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": " 12369874",
+              "type": "text"
+            },
+            {
+              "key": "password_confirmation",
+              "value": "12369874",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "email",
+              "value": "bip@gmail.com",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "b12369874B",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "Qelu0rRu3SR0RIl6PqyZWeRsP5XUYPZXsqdpVZCr1bc5a86d",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/auth/logout",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "auth",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Authenticated user retrieve",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "PbCRPhIuc8NbDi3Cx5RV9kEw2I9nhNqnoRrNNOkX7682588",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/user",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "user"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "All Tasks",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response is valid JSON', function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "const contentTypeHeader = pm.response.headers.get('Content-Type');",
+              "if (contentTypeHeader) {",
+              "    pm.test('Content-Type header indicates JSON when present', function () {",
+              "        pm.expect(contentTypeHeader.toLowerCase()).to.include('application/json');",
+              "    });",
+              "}",
+              "",
+              "const responseJson = pm.response.json();",
+              "",
+              "pm.test('Top-level response structure is valid', function () {",
+              "    pm.expect(responseJson).to.be.an('object');",
+              "    pm.expect(responseJson).to.have.property('success');",
+              "    pm.expect(responseJson.success).to.be.a('boolean');",
+              "    pm.expect(responseJson).to.have.property('message');",
+              "    pm.expect(responseJson.message).to.be.a('string').and.not.empty;",
+              "    pm.expect(responseJson).to.have.property('data');",
+              "    pm.expect(responseJson.data).to.be.an('array');",
+              "});",
+              "",
+              "pm.test('Success flag is true', function () {",
+              "    pm.expect(responseJson.success).to.eql(true);",
+              "});",
+              "",
+              "pm.test('Message field is present and meaningful', function () {",
+              "    pm.expect(responseJson.message).to.be.a('string');",
+              "    pm.expect(responseJson.message.trim().length).to.be.greaterThan(0);",
+              "});",
+              "",
+              "pm.test('Data is an array', function () {",
+              "    pm.expect(responseJson.data).to.be.an('array');",
+              "});",
+              "",
+              "const requestedStatus = pm.request.url.query.get('status') || 'completed';",
+              "",
+              "pm.test('Requested status query param is completed', function () {",
+              "    pm.expect(requestedStatus).to.eql('completed');",
+              "});",
+              "",
+              "responseJson.data.forEach(function (task, index) {",
+              "    pm.test(`Task at index ${index} has expected fields`, function () {",
+              "        pm.expect(task).to.be.an('object');",
+              "        pm.expect(task).to.have.property('id');",
+              "        pm.expect(task.id).to.satisfy(function (value) {",
+              "            return typeof value === 'number' || typeof value === 'string';",
+              "        });",
+              "        pm.expect(task).to.have.property('title');",
+              "        pm.expect(task.title).to.be.a('string');",
+              "        pm.expect(task).to.have.property('description');",
+              "        pm.expect(task.description === null || typeof task.description === 'string').to.eql(true);",
+              "        pm.expect(task).to.have.property('status');",
+              "        pm.expect(task.status).to.be.a('string');",
+              "        pm.expect(task).to.have.property('due_date');",
+              "        pm.expect(task.due_date === null || typeof task.due_date === 'string').to.eql(true);",
+              "        pm.expect(task).to.have.property('created_at');",
+              "        pm.expect(task.created_at).to.be.a('string');",
+              "        pm.expect(task).to.have.property('updated_at');",
+              "        pm.expect(task.updated_at).to.be.a('string');",
+              "    });",
+              "",
+              "    pm.test(`Task at index ${index} matches requested status`, function () {",
+              "        pm.expect(task.status).to.eql(requestedStatus);",
+              "    });",
+              "});",
+              "",
+              "if (responseJson.meta !== undefined) {",
+              "    pm.test('Meta field is an object when present', function () {",
+              "        pm.expect(responseJson.meta).to.be.an('object');",
+              "    });",
+              "",
+              "    pm.test('Pagination/meta fields are valid when present', function () {",
+              "        pm.expect(responseJson.meta).to.have.property('current_page');",
+              "        pm.expect(responseJson.meta.current_page).to.be.a('number');",
+              "        pm.expect(responseJson.meta).to.have.property('last_page');",
+              "        pm.expect(responseJson.meta.last_page).to.be.a('number');",
+              "        pm.expect(responseJson.meta).to.have.property('per_page');",
+              "        pm.expect(responseJson.meta.per_page).to.be.a('number');",
+              "        pm.expect(responseJson.meta).to.have.property('total');",
+              "        pm.expect(responseJson.meta.total).to.be.a('number');",
+              "    });",
+              "",
+              "    pm.test('Meta pagination values are internally consistent', function () {",
+              "        pm.expect(responseJson.meta.current_page).to.be.at.least(1);",
+              "        pm.expect(responseJson.meta.last_page).to.be.at.least(responseJson.meta.current_page);",
+              "        pm.expect(responseJson.meta.per_page).to.be.greaterThan(0);",
+              "        pm.expect(responseJson.meta.total).to.be.at.least(responseJson.data.length);",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/tasks?due_date=&per_page=&search=&status=pending",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ],
+          "query": [
+            {
+              "key": "due_date",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "per_page",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "search",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "status",
+              "value": "pending",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Task",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "accept": true
+        }
+      },
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "Test",
+              "type": "text",
+              "uuid": "5200aa6e-5597-4d90-ad5f-1f7ba5fd58ca"
+            },
+            {
+              "key": "description",
+              "value": "abc",
+              "type": "text",
+              "uuid": "1194fa71-6195-4101-a8be-329e3e5ec7ba"
+            },
+            {
+              "key": "status",
+              "value": "pending",
+              "type": "text",
+              "uuid": "89602fa5-d0db-448a-93b2-d46fc32d94c2"
+            },
+            {
+              "key": "due_date",
+              "value": "2019-08-24T14:15:22Z",
+              "type": "text",
+              "uuid": "fa1e2095-f580-4248-a87c-eb8523b8f736"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Show Task",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Task",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "Test",
+              "type": "text",
+              "uuid": "5200aa6e-5597-4d90-ad5f-1f7ba5fd58ca"
+            },
+            {
+              "key": "description",
+              "value": "abc",
+              "type": "text",
+              "uuid": "1194fa71-6195-4101-a8be-329e3e5ec7ba"
+            },
+            {
+              "key": "status",
+              "value": "pending",
+              "type": "text",
+              "uuid": "89602fa5-d0db-448a-93b2-d46fc32d94c2"
+            },
+            {
+              "key": "due_date",
+              "value": "2019-08-24T14:15:22Z",
+              "type": "text",
+              "uuid": "fa1e2095-f580-4248-a87c-eb8523b8f736"
+            },
+            {
+              "key": "_method",
+              "value": "PUT",
+              "type": "text",
+              "uuid": "14160583-bf25-425d-aec2-4448acb9c023"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/tasks/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Task",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tasks/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin get Users",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/admin/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "admin",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin update user role",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/admin/users/2/role?role=user",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "admin",
+            "users",
+            "2",
+            "role"
+          ],
+          "query": [
+            {
+              "key": "role",
+              "value": "user",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin get all Task",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response is valid JSON', function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "const contentTypeHeader = pm.response.headers.get('Content-Type');",
+              "if (contentTypeHeader) {",
+              "    pm.test('Content-Type header indicates JSON when present', function () {",
+              "        pm.expect(contentTypeHeader.toLowerCase()).to.include('application/json');",
+              "    });",
+              "}",
+              "",
+              "const responseJson = pm.response.json();",
+              "",
+              "pm.test('Top-level response structure is valid', function () {",
+              "    pm.expect(responseJson).to.be.an('object');",
+              "    pm.expect(responseJson).to.have.property('success');",
+              "    pm.expect(responseJson.success).to.be.a('boolean');",
+              "    pm.expect(responseJson).to.have.property('message');",
+              "    pm.expect(responseJson.message).to.be.a('string').and.not.empty;",
+              "    pm.expect(responseJson).to.have.property('data');",
+              "    pm.expect(responseJson.data).to.be.an('array');",
+              "});",
+              "",
+              "pm.test('Success flag is true', function () {",
+              "    pm.expect(responseJson.success).to.eql(true);",
+              "});",
+              "",
+              "pm.test('Message field is present and meaningful', function () {",
+              "    pm.expect(responseJson.message).to.be.a('string');",
+              "    pm.expect(responseJson.message.trim().length).to.be.greaterThan(0);",
+              "});",
+              "",
+              "pm.test('Data is an array', function () {",
+              "    pm.expect(responseJson.data).to.be.an('array');",
+              "});",
+              "",
+              "const requestedStatus = pm.request.url.query.get('status') || 'completed';",
+              "",
+              "pm.test('Requested status query param is completed', function () {",
+              "    pm.expect(requestedStatus).to.eql('completed');",
+              "});",
+              "",
+              "responseJson.data.forEach(function (task, index) {",
+              "    pm.test(`Task at index ${index} has expected fields`, function () {",
+              "        pm.expect(task).to.be.an('object');",
+              "        pm.expect(task).to.have.property('id');",
+              "        pm.expect(task.id).to.satisfy(function (value) {",
+              "            return typeof value === 'number' || typeof value === 'string';",
+              "        });",
+              "        pm.expect(task).to.have.property('title');",
+              "        pm.expect(task.title).to.be.a('string');",
+              "        pm.expect(task).to.have.property('description');",
+              "        pm.expect(task.description === null || typeof task.description === 'string').to.eql(true);",
+              "        pm.expect(task).to.have.property('status');",
+              "        pm.expect(task.status).to.be.a('string');",
+              "        pm.expect(task).to.have.property('due_date');",
+              "        pm.expect(task.due_date === null || typeof task.due_date === 'string').to.eql(true);",
+              "        pm.expect(task).to.have.property('created_at');",
+              "        pm.expect(task.created_at).to.be.a('string');",
+              "        pm.expect(task).to.have.property('updated_at');",
+              "        pm.expect(task.updated_at).to.be.a('string');",
+              "    });",
+              "",
+              "    pm.test(`Task at index ${index} matches requested status`, function () {",
+              "        pm.expect(task.status).to.eql(requestedStatus);",
+              "    });",
+              "});",
+              "",
+              "if (responseJson.meta !== undefined) {",
+              "    pm.test('Meta field is an object when present', function () {",
+              "        pm.expect(responseJson.meta).to.be.an('object');",
+              "    });",
+              "",
+              "    pm.test('Pagination/meta fields are valid when present', function () {",
+              "        pm.expect(responseJson.meta).to.have.property('current_page');",
+              "        pm.expect(responseJson.meta.current_page).to.be.a('number');",
+              "        pm.expect(responseJson.meta).to.have.property('last_page');",
+              "        pm.expect(responseJson.meta.last_page).to.be.a('number');",
+              "        pm.expect(responseJson.meta).to.have.property('per_page');",
+              "        pm.expect(responseJson.meta.per_page).to.be.a('number');",
+              "        pm.expect(responseJson.meta).to.have.property('total');",
+              "        pm.expect(responseJson.meta.total).to.be.a('number');",
+              "    });",
+              "",
+              "    pm.test('Meta pagination values are internally consistent', function () {",
+              "        pm.expect(responseJson.meta.current_page).to.be.at.least(1);",
+              "        pm.expect(responseJson.meta.last_page).to.be.at.least(responseJson.meta.current_page);",
+              "        pm.expect(responseJson.meta.per_page).to.be.greaterThan(0);",
+              "        pm.expect(responseJson.meta.total).to.be.at.least(responseJson.data.length);",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "{{base_url}}/admin/tasks?due_date=&per_page=&search=&status=pending",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "admin",
+            "tasks"
+          ],
+          "query": [
+            {
+              "key": "due_date",
+              "value": ""
+            },
+            {
+              "key": "per_page",
+              "value": ""
+            },
+            {
+              "key": "search",
+              "value": ""
+            },
+            {
+              "key": "status",
+              "value": "pending"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Update Task",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"string\",\r\n  \"description\": \"string\",\r\n  \"status\": \"pending\",\r\n  \"due_date\": \"2019-08-24T14:15:22Z\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/admin/tasks/5",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "admin",
+            "tasks",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Delete Task",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"string\",\r\n  \"description\": \"string\",\r\n  \"status\": \"pending\",\r\n  \"due_date\": \"2019-08-24T14:15:22Z\"\r\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/admin/tasks/5",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "admin",
+            "tasks",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{beare_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    },
+    {
+      "key": "beare_token",
+      "value": ""
+    }
+  ]
+}
