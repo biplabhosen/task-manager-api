@@ -23,10 +23,12 @@ class AuthApiTest extends TestCase
             ->assertCreated()
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.user.email', 'biplab@example.com')
+            ->assertJsonPath('data.user.role', User::ROLE_USER)
             ->assertJsonPath('data.token_type', 'Bearer');
 
         $this->assertDatabaseHas('users', [
             'email' => 'biplab@example.com',
+            'role' => User::ROLE_USER,
         ]);
     }
 

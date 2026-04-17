@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TaskController;
 use Illuminate\Http\Request;
@@ -21,6 +22,14 @@ Route::middleware('auth:sanctum')->group(function (): void {
             'message' => 'Authenticated user retrieved successfully.',
             'data' => $request->user(),
         ]);
+    });
+
+    Route::middleware('role:admin')->prefix('admin')->group(function (): void {
+        Route::get('/users', [AdminController::class, 'users']);
+        Route::patch('/users/{user}/role', [AdminController::class, 'updateUserRole']);
+        Route::get('/tasks', [AdminController::class, 'tasks']);
+        Route::patch('/tasks/{task}', [AdminController::class, 'updateTask']);
+        Route::delete('/tasks/{task}', [AdminController::class, 'destroyTask']);
     });
 
     Route::patch('tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
